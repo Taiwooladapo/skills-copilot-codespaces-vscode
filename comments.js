@@ -1,25 +1,20 @@
 // create web server
-// run server using node comments.js
-// open http://localhost:3000/ in browser
+// 1. import http module
+const http = require('http');
+const fs = require('fs');
+const url = require('url');
+const qs = require('querystring');
+const template = require('./lib/template.js');
 
-var http = require('http');
-var fs = require('fs');
-
-var server = http.createServer(function(req, res) {
-    console.log('request was made: ' + req.url);
-    if (req.url === '/home' || req.url === '/') {
-        res.writeHead(200, {'Content-Type': 'text/html'});
-        fs.createReadStream(__dirname + '/index.html').pipe(res);
-    } else if (req.url === '/contact') {
-        res.writeHead(200, {'Content-Type': 'text/html'});
-        fs.createReadStream(__dirname + '/contact.html').pipe(res);
-    } else if (req.url === '/api/ninjas') {
-        var ninjas = [{name: 'ryu', age: 29}, {name: 'yoshi', age: 32}];
-        res.writeHead(200, {'Content-Type': 'application/json'});
-        res.end(JSON.stringify(ninjas));
-    } else {
-        res.writeHead(404, {'Content-Type': 'text/html'});
-        fs.createReadStream(__dirname + '/404.html').pipe(res);
-    }
-});
-
+// 2. create web server object
+const app = http.createServer(function(request,response){
+    // 2.1. get url
+    const _url = request.url;
+    // 2.2. parse url
+    const queryData = url.parse(_url, true).query;
+    const pathname = url.parse(_url, true).pathname;
+    // 2.3. if pathname is root
+    if(pathname === '/'){
+        // 2.3.1. if queryData.id is undefined
+        if(queryData.id === undefined){
+            //
